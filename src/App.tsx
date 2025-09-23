@@ -2,9 +2,6 @@
 // @ts-nocheck
 import React, { useEffect, useMemo, useRef, useState } from "react";
 import { motion, useInView } from "framer-motion";
-import img1 from "./assets/3-red.jpg";
-import img2 from "./assets/1_render.png";
-import img3 from "./assets/pic-36.png";
 
 /**
  * NINA.MASLIKOVA — One-Page Portfolio (React + Tailwind)
@@ -236,17 +233,17 @@ export default function App() {
   // Project images (replace with your own)
   const projectImages = [
     {
-      src: "img1",
+      src: "/images/3-red.jpg",
       alt: "Sectional residential complex",
       caption: t.projects.cards[0].title,
     },
     {
-      src: "img2",
+      src: "/images/1_render.png",
       alt: "Apartment interior visualization",
       caption: t.projects.cards[1].title,
     },
     {
-      src: "img3",
+      src: "/images/pic-36.png",
       alt: "Working drawings / details",
       caption: t.projects.cards[2].title,
     },
