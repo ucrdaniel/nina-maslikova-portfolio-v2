@@ -236,17 +236,17 @@ export default function App() {
   // Project images (replace with your own)
   const projectImages = [
     {
-      src: "/docs/3-red.jpg",
+      src: "img1",
       alt: "Sectional residential complex",
       caption: t.projects.cards[0].title,
     },
     {
-      src: "/docs/1_render.png",
+      src: "img2",
       alt: "Apartment interior visualization",
       caption: t.projects.cards[1].title,
     },
     {
-      src: "/docs/pic-36.png",
+      src: "img3",
       alt: "Working drawings / details",
       caption: t.projects.cards[2].title,
     },
