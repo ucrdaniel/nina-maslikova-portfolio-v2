@@ -250,10 +250,7 @@ export default function App() {
   ];
 
   // Resolve all sources (handles "3-red.jpg", Drive, etc.)
-  const resolvedProjectImages = useMemo(
-    () => projectImages.map((p) => ({ ...p, src: resolveSrc(p.src) })),
-    [t.projects.cards]
-  );
+  const resolvedProjectImages = projectImages;
 
   const [lightboxIndex, setLightboxIndex] = useState<number | null>(null);
   const open = (i: number) => setLightboxIndex(i);
