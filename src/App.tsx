@@ -2,6 +2,9 @@
 // @ts-nocheck
 import React, { useEffect, useMemo, useRef, useState } from "react";
 import { motion, useInView } from "framer-motion";
+import img1 from "./assets/3-red.jpg";
+import img2 from "./assets/1_render.png";
+import img3 from "./assets/pic-36.png";
 
 /**
  * NINA.MASLIKOVA — One-Page Portfolio (React + Tailwind)
@@ -661,7 +664,6 @@ export function translate(lang: "ru" | "en") {
     projects: {
       title: "Избранные проекты",
       filters: ["Все", "Жилые", "Интерьеры", "Рабочка"],
-      note: "Нажмите на любую картинку, чтобы открыть лайтбокс. Свои изображения легко подключить.",
       cards: [
         {
           category: "Жилые",
