@@ -183,25 +183,88 @@ function runSelfTests() {
   }
 }
 
+// Custom hook for prefers-reduced-motion
+function usePrefersReducedMotion() {
+  const [prefersReducedMotion, setPrefersReducedMotion] = useState(false);
+  
+  useEffect(() => {
+    const mediaQuery = window.matchMedia('(prefers-reduced-motion: reduce)');
+    setPrefersReducedMotion(mediaQuery.matches);
+    
+    const listener = (event) => {
+      setPrefersReducedMotion(event.matches);
+    };
+    
+    mediaQuery.addEventListener('change', listener);
+    return () => mediaQuery.removeEventListener('change', listener);
+  }, []);
+  
+  return prefersReducedMotion;
+}
+
 // ========= App
 export default function App() {
-  // Load Roboto Mono
+  // Load fonts and preload hero image
   useEffect(() => {
+    // Load Roboto Mono
     const link = document.createElement("link");
     link.href = "https://fonts.googleapis.com/css2?family=Roboto+Mono:wght@400;500;700&display=swap";
     link.rel = "stylesheet";
     document.head.appendChild(link);
-    return () => document.head.removeChild(link);
+    
+    // Load Herbus-Pointy for logo
+    const style = document.createElement("style");
+    style.textContent = `
+      @font-face {
+        font-family: 'Herbus';
+        src: url('/fonts/Herbus-Pointy.ttf') format('truetype');
+        font-weight: normal;
+        font-style: normal;
+        font-display: swap;
+      }
+    `;
+    document.head.appendChild(style);
+    
+    // Preload hero image for better LCP
+    const preloadLink = document.createElement("link");
+    preloadLink.href = "/images/her-pic.png";
+    preloadLink.rel = "preload";
+    preloadLink.as = "image";
+    preloadLink.type = "image/png";
+    document.head.appendChild(preloadLink);
+    
+    return () => {
+      document.head.removeChild(link);
+      document.head.removeChild(style);
+      document.head.removeChild(preloadLink);
+    };
   }, []);
 
-  // Language toggle
-  const [lang, setLang] = useState("ru");
+  // Language toggle with persistence
+  const [lang, setLang] = useState(() => {
+    // Try to get language from localStorage first
+    const savedLang = localStorage.getItem("lang");
+    if (savedLang === "ru" || savedLang === "en") return savedLang;
+    
+    // Try to detect browser language
+    const browserLang = navigator.language.toLowerCase();
+    if (browserLang.startsWith("ru")) return "ru";
+    
+    // Default to Russian
+    return "ru";
+  });
+  
+  // Update localStorage when language changes
+  const handleSetLang = (newLang: "ru" | "en") => {
+    setLang(newLang);
+    localStorage.setItem("lang", newLang);
+  };
+  
   const t = useMemo(() => translate(lang), [lang]);
 
   // Hero background — can be remote or /public/hero.jpg
-  const heroImgUrl =
-    "https://images.unsplash.com/photo-1491553895911-0055eca6402d?q=80&w=1920&auto=format&fit=crop";
-  const heroResolved = useMemo(() => resolveSrc(heroImgUrl), [heroImgUrl]);
+  // Use direct path to hero image
+  const heroImgUrl = "/images/her-pic.png";
 
   // Run tests
   useEffect(() => { runSelfTests(); }, []);
@@ -209,6 +272,7 @@ export default function App() {
   // Nav highlighting (with header compensation + scroll margins on sections)
   const [active, setActive] = useState("home");
   const [expandedAward, setExpandedAward] = useState(null);
+  const prefersReducedMotion = usePrefersReducedMotion();
   useEffect(() => {
     const ids = ["home", "about", "projects", "awards", "contact"];
     const handle = () => {
@@ -272,9 +336,11 @@ export default function App() {
 
       {/* Header */}
       <header className="fixed top-4 left-0 right-0 z-40">
-        <Container>
-          <nav className="flex items-center justify-between rounded-2xl bg-white/70 backdrop-blur supports-[backdrop-filter]:bg-white/40 shadow-lg border border-[#E5E5E5] px-6 py-4">
-            <a href="#home" className="text-base sm:text-lg font-bold tracking-wider uppercase hover:opacity-80 transition text-[#FF4500]">NINA.MASLIKOVA</a>
+        <div className="max-w-[1600px] mx-auto">
+          <div className="mx-4 sm:mx-6 lg:mx-8 rounded-2xl bg-white/70 backdrop-blur supports-[backdrop-filter]:bg-white/40 shadow-lg border border-[#E5E5E5]">
+            <Container>
+              <nav className="flex items-center justify-between py-4">
+            <a href="#home" className="text-base sm:text-2xl font-bold tracking-wider uppercase hover:opacity-80 transition text-[#FF4500]" style={{ fontFamily: '"Herbus", sans-serif' }}>NINA.MASLIKOVA</a>
             <div className="hidden md:flex gap-8 text-sm uppercase">
               {[
                 { id: "about", label: t.nav.about },
@@ -291,32 +357,39 @@ export default function App() {
                 </a>
               ))}
             </div>
-            <div className="flex items-center gap-3">
-              <a
-                href="https://drive.google.com/file/d/1pwVLYcPHJS2FO3Y3oYkaTwirQjMiBqWy/view?usp=sharing"
-                target="_blank" rel="noreferrer"
-                className="hidden sm:inline-flex uppercase text-sm font-semibold border-2 border-[#FF4500] text-[#FF4500] px-4 py-2 rounded-lg hover:bg-[#FF4500] hover:text-white transition"
-              >
-                {t.cta.drive}
-              </a>
-              <button
-                onClick={() => setLang((l) => (l === "ru" ? "en" : "ru"))}
-                className="uppercase text-sm font-semibold border px-3 py-2 rounded-lg hover:bg-[#F5F5F5] transition"
-                aria-label="Toggle language"
-              >
-                {lang === "ru" ? "EN" : "RU"}
-              </button>
+            <div className="flex items-center">
+              <div className="flex rounded-lg overflow-hidden border-2 border-[#FF4500] text-xs sm:text-sm">
+                <button
+                  onClick={() => handleSetLang("ru")}
+                  className={`uppercase font-semibold px-2 sm:px-3 py-2 transition ${lang === "ru" ? "bg-[#FF4500] text-white" : "text-[#FF4500] hover:bg-[#FF4500] hover:text-white"}`}
+                  aria-label="Switch to Russian"
+                  aria-pressed={lang === "ru"}
+                >
+                  RU
+                </button>
+                <div className="w-px bg-[#FF4500]"></div>
+                <button
+                  onClick={() => handleSetLang("en")}
+                  className={`uppercase font-semibold px-2 sm:px-3 py-2 transition ${lang === "en" ? "bg-[#FF4500] text-white" : "text-[#FF4500] hover:bg-[#FF4500] hover:text-white"}`}
+                  aria-label="Switch to English"
+                  aria-pressed={lang === "en"}
+                >
+                  EN
+                </button>
+              </div>
             </div>
           </nav>
         </Container>
+          </div>
+        </div>
       </header>
 
       {/* Hero — background image fills before About */}
-      <Section id="home" className="min-h-screen flex items-end pt-32 lg:pt-40 relative overflow-hidden">
+      <Section id="home" className="min-h-[90vh] flex items-end pt-32 lg:pt-40 relative overflow-hidden">
         {/* Background image across the whole hero */}
-        <div className="absolute inset-0 -z-10 bg-center bg-cover" style={{ backgroundImage: `url(${heroResolved})` }} />
+        <div className="absolute inset-0 -z-10 bg-center bg-cover bg-no-repeat" style={{ backgroundImage: `url(${heroImgUrl})` }} />
         {/* Soft gradient to keep text readable */}
-        <div className="absolute inset-0 -z-10 bg-gradient-to-t from-white/90 via-white/40 to-transparent" />
+        <div className="absolute inset-0 -z-10 bg-gradient-to-t from-white/50 via-white/20 to-transparent" />
         <Container>
           {/* Align with site grid */}
           <div className="grid lg:grid-cols-12 gap-12 lg:gap-16 w-full">
@@ -476,22 +549,33 @@ export default function App() {
                   <button
                     onClick={() => setExpandedAward(expandedAward === i ? null : i)}
                     className="w-full text-left flex items-center justify-between hover:opacity-80 transition-opacity"
+                    aria-expanded={expandedAward === i}
+                    aria-controls={`award-content-${i}`}
                   >
                     <span className="font-medium text-lg pr-4">{award.title}</span>
                     <div 
-                      className={`text-2xl font-light transition-transform duration-500 ease-in-out ${
+                      className={`text-2xl font-light transition-transform duration-300 ease-in-out ${
                         expandedAward === i ? 'rotate-[225deg]' : 'rotate-0'
                       }`}
                       style={{ transformOrigin: 'center' }}
+                      aria-hidden="true"
                     >
                       +
                     </div>
                   </button>
-                  {expandedAward === i && (
-                    <div className="pt-4 text-[#666] animate-in slide-in-from-top-2 duration-300">
+                  <div 
+                    id={`award-content-${i}`}
+                    className={`overflow-hidden ${!prefersReducedMotion ? `transition-all duration-300 ${expandedAward === i ? 'ease-out' : 'ease-in'}` : ''}`}
+                    style={{ 
+                      maxHeight: expandedAward === i ? '200px' : '0px',
+                      opacity: expandedAward === i ? 1 : 0,
+                      transition: prefersReducedMotion ? 'none' : undefined
+                    }}
+                  >
+                    <div className={`pt-4 text-[#666] transform ${!prefersReducedMotion ? `transition-transform duration-300 ${expandedAward === i ? 'translate-y-0' : 'translate-y-2'}` : ''}`}>
                       <p>{award.detail}</p>
                     </div>
-                  )}
+                  </div>
                 </div>
               </Reveal>
             ))}
@@ -512,7 +596,6 @@ export default function App() {
                 <div>✉️ <a className="underline hover:no-underline" href="mailto:ninamaslikova211003@gmail.com">ninamaslikova211003@gmail.com</a></div>
                 <div>📞 <a className="underline hover:no-underline" href="tel:+79147756681">+7 (914) 775-66-81</a></div>
                 <div>📍 St. Petersburg, Russia</div>
-                <div>📁 <a className="underline hover:no-underline" target="_blank" rel="noreferrer" href="https://drive.google.com/file/d/1pwVLYcPHJS2FO3Y3oYkaTwirQjMiBqWy/view?usp=sharing">{t.cta.drive}</a></div>
                 <div>IG: <a className="underline hover:no-underline" target="_blank" rel="noreferrer" href="https://instagram.com/mm_ninona">@mm_ninona</a></div>
               </div>
               <form onSubmit={(e) => e.preventDefault()} className="border border-[#E5E5E5] rounded p-5 bg-white/80">
@@ -551,7 +634,6 @@ export function translate(lang: "ru" | "en") {
   if (lang === "en") {
     return {
       nav: { about: "About", projects: "Projects", skills: "Skills", awards: "Awards", contact: "Contact" },
-      cta: { drive: "Open Drive Portfolio" },
       hero: {
         name: "Architect — NINA MASLIKOVA",
         tagline:
@@ -636,16 +718,15 @@ export function translate(lang: "ru" | "en") {
         p: "Send a short brief and I will reply with first steps and timing.",
         form: { name: "Your name", message: "Message", send: "Send" },
       },
-      footer: "Portfolio website (preview)",
+      footer: "Portfolio website",
     };
   }
 
   // RU default
   return {
     nav: { about: "Обо мне", projects: "Проекты", skills: "Навыки", awards: "Награды", contact: "Контакты" },
-    cta: { drive: "Открыть портфолио на Диске" },
     hero: {
-      name: "Архитектор — NINA MASLIKOVA",
+      name: "Индивидуальный проект под вас — NINA MASLIKOVA",
       tagline:
         "Создаю понятные, живые пространства с точными чертежами и премиальными визуализациями. Веду проекты от концепции до рабочей документации.",
       viewWork: "Смотреть проекты",
