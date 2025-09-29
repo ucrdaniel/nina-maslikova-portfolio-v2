@@ -66,6 +66,9 @@ const FALLBACK_IMG =
     "</svg>"
   );
 
+
+
+
 const Container = ({ children, className = "" }) => (
   <div className={`max-w-[1600px] mx-auto px-4 sm:px-6 lg:px-8 ${className}`}>{children}</div>
 );
@@ -510,7 +513,7 @@ export default function App() {
                 <div>📞 <a className="underline hover:no-underline" href="tel:+79147756681">+7 (914) 775-66-81</a></div>
                 <div>📍 St. Petersburg, Russia</div>
                 <div>📁 <a className="underline hover:no-underline" target="_blank" rel="noreferrer" href="https://drive.google.com/file/d/1pwVLYcPHJS2FO3Y3oYkaTwirQjMiBqWy/view?usp=sharing">{t.cta.drive}</a></div>
-                <div>IG: <a className="underline hover:no-underline" target="_blank" rel="noreferrer" href="https://instagram.com/mm_ninama">@mm_ninama</a></div>
+                <div>IG: <a className="underline hover:no-underline" target="_blank" rel="noreferrer" href="https://instagram.com/mm_ninona">@mm_ninona</a></div>
               </div>
               <form onSubmit={(e) => e.preventDefault()} className="border border-[#E5E5E5] rounded p-5 bg-white/80">
                 <label className="block text-xs uppercase tracking-wide mb-1">{t.contact.form.name}</label>
