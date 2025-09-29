@@ -2,6 +2,7 @@
 // @ts-nocheck
 import React, { useEffect, useMemo, useRef, useState } from "react";
 import { motion, useInView } from "framer-motion";
+import heroPic from "/images/her-pic.png?url";
 
 /**
  * NINA.MASLIKOVA — One-Page Portfolio (React + Tailwind)
@@ -358,7 +359,7 @@ export default function App() {
               ))}
             </div>
             <div className="flex items-center">
-              <div className="flex rounded-lg overflow-hidden border-2 border-[#FF4500] text-xs sm:text-sm">
+              <div className="flex overflow-hidden border-2 border-[#FF4500] text-xs sm:text-sm">
                 <button
                   onClick={() => handleSetLang("ru")}
                   className={`uppercase font-semibold px-2 sm:px-3 py-2 transition ${lang === "ru" ? "bg-[#FF4500] text-white" : "text-[#FF4500] hover:bg-[#FF4500] hover:text-white"}`}
@@ -387,27 +388,28 @@ export default function App() {
       {/* Hero — background image fills before About */}
       <Section 
         id="home" 
-        className="min-h-[90vh] flex items-end pt-32 lg:pt-40 relative overflow-hidden bg-center bg-cover bg-no-repeat" 
-        style={{ 
-          backgroundImage: `url('/images/her-pic.png')`,
-          backgroundPosition: 'center',
-          backgroundSize: 'cover',
-          backgroundRepeat: 'no-repeat'
-        }}
+        className="min-h-screen flex items-end pt-32 lg:pt-40 relative overflow-hidden"
       >
+        {/* Background image */}
+        <img 
+          src={heroPic}
+          alt="Hero background"
+          className="absolute left-0 w-full h-full object-cover"
+          style={{ minWidth: '100%', minHeight: '100%', top: '-2%'}}
+        />
         {/* Soft gradient to keep text readable */}
-        <div className="absolute inset-0 bg-gradient-to-t from-white/40 via-white/10 to-transparent" />
-        <Container>
+        <div className="absolute inset-0 bg-gradient-to-t from-white/40 via-white/10 to-transparent pointer-events-none" />
+        <Container className="relative z-10">
           {/* Align with site grid */}
           <div className="grid lg:grid-cols-12 gap-12 lg:gap-16 w-full">
             <div className="lg:col-span-10 xl:col-span-9">
               <Reveal>
-                <h1 className="text-5xl sm:text-6xl lg:text-7xl xl:text-8xl font-bold uppercase leading-[1.05] tracking-[-0.02em]">
+                <h1 className="text-5xl sm:text-6xl lg:text-7xl xl:text-8xl font-bold uppercase leading-[1.05] tracking-[-0.02em] drop-shadow-lg">
                   {t.hero.name}
                 </h1>
               </Reveal>
               <Reveal delay={0.1}>
-                <p className="mt-8 text-lg sm:text-xl lg:text-2xl text-[#333] max-w-4xl leading-relaxed">
+                <p className="mt-8 text-lg sm:text-xl lg:text-2xl text-[#333] max-w-4xl leading-relaxed drop-shadow-md">
                   {t.hero.tagline}
                 </p>
               </Reveal>
@@ -422,7 +424,7 @@ export default function App() {
                 </div>
               </Reveal>
               <Reveal delay={0.3}>
-                <div className="mt-12 text-base text-[#666]">
+                <div className="mt-12 text-base text-[#666] drop-shadow-md">
                   {t.hero.location}
                 </div>
               </Reveal>
@@ -642,12 +644,11 @@ export function translate(lang: "ru" | "en") {
     return {
       nav: { about: "About", projects: "Projects", skills: "Skills", awards: "Awards", contact: "Contact" },
       hero: {
-        name: "Architect — NINA MASLIKOVA",
+        name: "An individual project for you",
         tagline:
-          "Creating clear, liveable spaces with precise drawings and premium visualizations. I take projects from concept to working documentation.",
+          "I create vibrant spaces with attention to detail and personalized service. I manage projects from concept to final documentation.",
         viewWork: "View Projects",
         contact: "Contact",
-        location: "Based in St. Petersburg, working worldwide",
       },
       about: {
         title: "About",
@@ -733,12 +734,11 @@ export function translate(lang: "ru" | "en") {
   return {
     nav: { about: "Обо мне", projects: "Проекты", skills: "Навыки", awards: "Награды", contact: "Контакты" },
     hero: {
-      name: "Индивидуальный проект под вас — NINA MASLIKOVA",
+      name: "Индивидуальный проект под вас",
       tagline:
-        "Создаю понятные, живые пространства с точными чертежами и премиальными визуализациями. Веду проекты от концепции до рабочей документации.",
+        "Создаю живые пространства с вниманием к вам и к деталям. Веду проекты от концепции до рабочей документации.",
       viewWork: "Смотреть проекты",
       contact: "Написать",
-      location: "Базируюсь в Санкт-Петербурге, работаю по всему миру",
     },
     about: {
       title: "Обо мне",
