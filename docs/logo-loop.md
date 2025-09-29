@@ -11,3 +11,7 @@ This document describes the logo animation loop used in the portfolio site.
 
 ## Implementation
 The animation is implemented using Framer Motion with CSS keyframes for smooth transitions.
+
+
+
+-----------
