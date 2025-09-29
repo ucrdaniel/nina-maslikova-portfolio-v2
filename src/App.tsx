@@ -3,6 +3,9 @@
 import React, { useEffect, useMemo, useRef, useState } from "react";
 import { motion, useInView } from "framer-motion";
 import heroPic from "/images/her-pic.png?url";
+import AboutBody from "./components/about/AboutBody";
+import AboutServices from "./components/about/AboutServices";
+import AboutLogos from "./components/about/AboutLogos";
 
 /**
  * NINA.MASLIKOVA — One-Page Portfolio (React + Tailwind)
@@ -433,58 +436,29 @@ export default function App() {
         </Container>
       </Section>
 
-      {/* About — with skills chips merged in */}
+      {/* About — with animated stats and two-column layout */}
       <Section id="about" className="bg-white/40">
         <Container>
-          <div className="grid lg:grid-cols-12 gap-12 lg:gap-16">
-            <div className="lg:col-span-8 xl:col-span-9">
-              <Reveal>
-                <h2 className="text-4xl sm:text-5xl lg:text-6xl font-bold uppercase mb-10">{t.about.title}</h2>
-              </Reveal>
-              <Reveal delay={0.1}>
-                <p className="text-lg text-[#333] leading-relaxed mb-8">{t.about.p1}</p>
-              </Reveal>
-              <Reveal delay={0.15}>
-                <p className="text-lg text-[#333] leading-relaxed">{t.about.p2}</p>
-              </Reveal>
-              <Reveal delay={0.25}>
-                <div className="mt-12">
-                  <h3 className="text-base uppercase tracking-wide text-[#666] mb-6">{lang === "ru" ? "Навыки и софт" : "Skills & Software"}</h3>
-                  <ul className="flex flex-wrap gap-3">
-                    {t.skills.items.map((s, i) => (
-                      <li key={i} className="px-4 py-2 rounded-full border border-[#E5E5E5] bg-white/70 text-sm">
-                        {s.name}{s.note ? <span className="text-[#666]"> — {s.note}</span> : null}
-                      </li>
-                    ))}
-                  </ul>
-                </div>
-              </Reveal>
-            </div>
-            <div className="lg:col-span-4 xl:col-span-3">
-              <Reveal>
-                <div className="rounded-xl border border-[#E5E5E5] p-8 bg-white/70 backdrop-blur-sm">
-                  <dl className="grid grid-cols-1 gap-6 text-base">
-                    <div>
-                      <dt className="text-[#666] mb-1">{t.about.quick.roleL}</dt>
-                      <dd className="font-medium">{t.about.quick.role}</dd>
-                    </div>
-                    <div>
-                      <dt className="text-[#666] mb-1">{t.about.quick.locationL}</dt>
-                      <dd className="font-medium">St. Petersburg, Russia</dd>
-                    </div>
-                    <div>
-                      <dt className="text-[#666] mb-1">{t.about.quick.langsL}</dt>
-                      <dd className="font-medium">Russian, English</dd>
-                    </div>
-                    <div>
-                      <dt className="text-[#666] mb-1">{t.about.quick.contactL}</dt>
-                      <dd className="font-medium">ninamaslikova211003@gmail.com</dd>
-                    </div>
-                  </dl>
-                </div>
-              </Reveal>
-            </div>
-          </div>
+          <Reveal>
+            <h2 className="text-4xl sm:text-5xl lg:text-6xl font-bold uppercase mb-10">{t.about.title}</h2>
+          </Reveal>
+          
+          <Reveal delay={0.1}>
+            <AboutBody 
+              title={t.about.bodyTitle}
+              p1={t.about.p1}
+              p2={t.about.p2}
+              stats={t.about.stats}
+            />
+          </Reveal>
+
+          <Reveal delay={0.2}>
+            <AboutServices services={t.about.services} />
+          </Reveal>
+
+          <Reveal delay={0.3}>
+            <AboutLogos />
+          </Reveal>
         </Container>
       </Section>
 
@@ -652,9 +626,28 @@ export function translate(lang: "ru" | "en") {
       },
       about: {
         title: "About",
-        p1: "Architect and drafter focused on thoughtful housing and interiors. I work with GOST & SP, prepare working drawings, and craft visuals that communicate design decisions.",
-        p2: "Comfort with complex projects, tight deadlines, and clear communication with builders. I enjoy the calm logic of plans, sections, and details.",
-        quick: { roleL: "Role", role: "Architect", locationL: "Location", langsL: "Languages", contactL: "Email" },
+        bodyTitle: "My Approach",
+        p1: "Architect and drafter focused on thoughtful housing and interiors. I work with GOST & SP standards, prepare working drawings, and craft visuals that communicate design decisions clearly.",
+        p2: "Experienced with complex projects, tight deadlines, and clear communication with builders. I enjoy the calm logic of plans, sections, and details.",
+        stats: {
+          years: "years of experience",
+          projects: "completed projects",
+          clients: "satisfied clients"
+        },
+        services: [
+          {
+            title: "Full Cycle\nProjects",
+            description: "Complete project management from initial concept through working documentation and construction supervision."
+          },
+          {
+            title: "Technical\nDocumentation",
+            description: "Detailed working drawings, nodes, and specifications following GOST and SP standards."
+          },
+          {
+            title: "3D Visualization",
+            description: "High-quality architectural visualizations and renderings to communicate design intent."
+          }
+        ]
       },
       projects: {
         title: "Selected Projects",
@@ -742,9 +735,28 @@ export function translate(lang: "ru" | "en") {
     },
     about: {
       title: "Обо мне",
+      bodyTitle: "Мой подход",
       p1: "Архитектор и чертёжник, фокус на продуманном жилье и интерьерах. Работаю по ГОСТ и СП, готовлю рабочие чертежи и визуализации, которые ясно объясняют решения.",
       p2: "Уверенно веду сложные задачи и сроки, выстраиваю коммуникацию со строителями. Люблю спокойную логику планов, разрезов и узлов.",
-      quick: { roleL: "Роль", role: "Архитектор", locationL: "Город", langsL: "Языки", contactL: "Почта" },
+      stats: {
+        years: "лет опыта",
+        projects: "выполненных проектов",
+        clients: "довольных клиентов"
+      },
+      services: [
+        {
+          title: "Проекты\nпод ключ",
+          description: "Полное ведение проектов от концепции до рабочей документации и авторского надзора."
+        },
+        {
+          title: "Рабочая\nдокументация",
+          description: "Детальные чертежи, узлы и спецификации по ГОСТ и СП для строительства."
+        },
+        {
+          title: "3D визуализация",
+          description: "Качественные архитектурные визуализации и рендеры для презентации проекта."
+        }
+      ]
     },
     projects: {
       title: "Избранные проекты",
