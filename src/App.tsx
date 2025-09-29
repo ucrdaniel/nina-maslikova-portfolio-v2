@@ -231,6 +231,7 @@ export default function App() {
     preloadLink.rel = "preload";
     preloadLink.as = "image";
     preloadLink.type = "image/png";
+    preloadLink.fetchPriority = "high";
     document.head.appendChild(preloadLink);
     
     return () => {
@@ -263,8 +264,7 @@ export default function App() {
   const t = useMemo(() => translate(lang), [lang]);
 
   // Hero background — can be remote or /public/hero.jpg
-  // Use direct path to hero image
-  const heroImgUrl = "/images/her-pic.png";
+  // Hero image path is applied directly in the style attribute
 
   // Run tests
   useEffect(() => { runSelfTests(); }, []);
@@ -385,11 +385,18 @@ export default function App() {
       </header>
 
       {/* Hero — background image fills before About */}
-      <Section id="home" className="min-h-[90vh] flex items-end pt-32 lg:pt-40 relative overflow-hidden">
-        {/* Background image across the whole hero */}
-        <div className="absolute inset-0 -z-10 bg-center bg-cover bg-no-repeat" style={{ backgroundImage: `url(${heroImgUrl})` }} />
+      <Section 
+        id="home" 
+        className="min-h-[90vh] flex items-end pt-32 lg:pt-40 relative overflow-hidden bg-center bg-cover bg-no-repeat" 
+        style={{ 
+          backgroundImage: `url('/images/her-pic.png')`,
+          backgroundPosition: 'center',
+          backgroundSize: 'cover',
+          backgroundRepeat: 'no-repeat'
+        }}
+      >
         {/* Soft gradient to keep text readable */}
-        <div className="absolute inset-0 -z-10 bg-gradient-to-t from-white/50 via-white/20 to-transparent" />
+        <div className="absolute inset-0 bg-gradient-to-t from-white/40 via-white/10 to-transparent" />
         <Container>
           {/* Align with site grid */}
           <div className="grid lg:grid-cols-12 gap-12 lg:gap-16 w-full">
