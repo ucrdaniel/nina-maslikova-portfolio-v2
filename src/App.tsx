@@ -647,7 +647,6 @@ export function translate(lang: "ru" | "en") {
       projects: {
         title: "Selected Projects",
         filters: ["All", "Residential", "Interior", "Working docs"],
-        note: "Click any image to open it in a lightbox. Your own renders/photos can be plugged in easily.",
         cards: [
           {
             category: "Residential",
@@ -821,6 +820,6 @@ export function translate(lang: "ru" | "en") {
       p: "Пришлите небольшой бриф — отвечу первыми шагами и сроками.",
       form: { name: "Имя", message: "Сообщение", send: "Отправить" },
     },
-    footer: "сайт-портфолио (превью)",
+    footer: "сайт-портфолио",
   };
 }
