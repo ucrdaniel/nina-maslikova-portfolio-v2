@@ -30,9 +30,10 @@ const useResizeObserver = (cb: () => void, refs: Array<React.RefObject<Element |
   useEffect(() => {
     if (!("ResizeObserver" in window)) {
       const onR = () => cb();
-      window.addEventListener("resize", onR);
+      const win = window as Window & typeof globalThis;
+      win.addEventListener("resize", onR);
       cb();
-      return () => window.removeEventListener("resize", onR);
+      return () => win.removeEventListener("resize", onR);
     }
     const obs = refs.map((r) => {
       if (!r.current) return null;
@@ -42,18 +43,18 @@ const useResizeObserver = (cb: () => void, refs: Array<React.RefObject<Element |
     });
     cb();
     return () => obs.forEach((o) => o?.disconnect());
-  }, deps);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [...deps]);
 };
 
 const useImageLoader = (seqRef: React.RefObject<HTMLUListElement | null>, onLoad: () => void, deps: React.DependencyList) => {
   useEffect(() => {
-    const imgs = seqRef.current?.querySelectorAll("img") ?? [];
+    const imgs = Array.from(seqRef.current?.querySelectorAll("img") ?? []) as HTMLImageElement[];
     if (imgs.length === 0) return onLoad();
     let left = imgs.length;
     const done = () => (--left === 0 ? onLoad() : undefined);
     imgs.forEach((i) => {
-      const el = i as HTMLImageElement;
-      el.complete ? done() : (el.addEventListener("load", done, { once: true }), el.addEventListener("error", done, { once: true }));
+      i.complete ? done() : (i.addEventListener("load", done, { once: true }), i.addEventListener("error", done, { once: true }));
     });
     return () => imgs.forEach((i) => {
       i.removeEventListener("load", done);
@@ -134,7 +135,7 @@ export const LogoLoop = React.memo<LogoLoopProps>(function LogoLoop({
   const seqRef = useRef<HTMLUListElement>(null);
 
   const [seqWidth, setSeqWidth] = useState(0);
-  const [copies, setCopies] = useState(CFG.MIN_COPIES);
+  const [copies, setCopies] = useState<number>(CFG.MIN_COPIES);
   const [hover, setHover] = useState(false);
 
   const velocity = useMemo(() => {
@@ -149,7 +150,8 @@ export const LogoLoop = React.memo<LogoLoopProps>(function LogoLoop({
     const sw = seqRef.current?.getBoundingClientRect?.()?.width ?? 0;
     if (sw > 0) {
       setSeqWidth(Math.ceil(sw));
-      setCopies(Math.max(CFG.MIN_COPIES, Math.ceil(cw / sw) + CFG.COPY_HEADROOM));
+      const newCopies = Math.max(CFG.MIN_COPIES, Math.ceil(cw / sw) + CFG.COPY_HEADROOM);
+      setCopies(newCopies);
     }
   }, []);
 

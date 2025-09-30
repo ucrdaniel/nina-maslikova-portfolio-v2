@@ -1,0 +1,1 @@
+{"root":["./src/app.tsx","./src/main.tsx","./src/__tests__/translate.test.ts","./src/components/about/aboutbody.tsx","./src/components/about/aboutlogos.tsx","./src/components/about/aboutservices.tsx","./src/components/marquees/logoloop.tsx","./src/components/motions/countup.tsx"],"version":"5.9.2"}
