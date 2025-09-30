@@ -440,23 +440,19 @@ export default function App() {
       <Section id="about" className="bg-white/40">
         <Container>
           <Reveal>
-            <h2 className="text-4xl sm:text-5xl lg:text-6xl font-bold uppercase mb-10">{t.about.title}</h2>
-          </Reveal>
-          
-          <Reveal delay={0.1}>
             <AboutBody 
-              title={t.about.bodyTitle}
+              sectionTitle={t.about.title}
               p1={t.about.p1}
               p2={t.about.p2}
               stats={t.about.stats}
             />
           </Reveal>
 
-          <Reveal delay={0.2}>
+          <Reveal delay={0.1}>
             <AboutServices services={t.about.services} />
           </Reveal>
 
-          <Reveal delay={0.3}>
+          <Reveal delay={0.2}>
             <AboutLogos />
           </Reveal>
         </Container>
@@ -626,7 +622,6 @@ export function translate(lang: "ru" | "en") {
       },
       about: {
         title: "About",
-        bodyTitle: "My Approach",
         p1: "Architect and drafter focused on thoughtful housing and interiors. I work with GOST & SP standards, prepare working drawings, and craft visuals that communicate design decisions clearly.",
         p2: "Experienced with complex projects, tight deadlines, and clear communication with builders. I enjoy the calm logic of plans, sections, and details.",
         stats: {
@@ -735,7 +730,6 @@ export function translate(lang: "ru" | "en") {
     },
     about: {
       title: "Обо мне",
-      bodyTitle: "Мой подход",
       p1: "Архитектор и чертёжник, фокус на продуманном жилье и интерьерах. Работаю по ГОСТ и СП, готовлю рабочие чертежи и визуализации, которые ясно объясняют решения.",
       p2: "Уверенно веду сложные задачи и сроки, выстраиваю коммуникацию со строителями. Люблю спокойную логику планов, разрезов и узлов.",
       stats: {
