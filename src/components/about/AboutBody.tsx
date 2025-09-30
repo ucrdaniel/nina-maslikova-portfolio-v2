@@ -75,7 +75,7 @@ export default function AboutBody({ sectionTitle, p1, p2, stats }: AboutBodyProp
         {/* RIGHT — image */}
         <figure className="relative h-full overflow-hidden rounded-r-2xl">
           <img 
-            src="/public/images/about-portrait.png" 
+            src="/images/about-portrait.png" 
             alt="Nina Maslikova portrait" 
             className="absolute inset-0 h-full w-full object-cover" 
             loading="lazy" 
